@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 
+	"github.com/Akorex/caronago/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,4 +20,6 @@ func Connect(dsn string){
 	log.Println("Connected to database successfully")
 
 	DB = db
+
+	db.AutoMigrate(&models.User{})
 }
