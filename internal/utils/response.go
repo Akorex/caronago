@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 
 type Response struct {
 	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Message any `json:"message"`
 	Data    any    `json:"data"`
 }
 
@@ -16,10 +16,10 @@ func SendSuccess(c *gin.Context, status int, message string, data any){
 	})
 }
 
-func SendError(c *gin.Context, status int, message string){
+func SendError(c *gin.Context, status int, message any){
 	c.JSON(status, Response{
 		Success: false,
 		Message: message,
-		Data: nil,
+		Data:    nil,
 	})
 }

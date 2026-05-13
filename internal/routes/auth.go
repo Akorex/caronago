@@ -9,5 +9,6 @@ func RegisterAuthRoutes(router *gin.RouterGroup, h *handlers.AuthHandler){
 	authGroup := router.Group("/auth")
 	{
 		authGroup.POST("/register", h.Register)
+		authGroup.POST("/login", h.Login)
 	}
 }
