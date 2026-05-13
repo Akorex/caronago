@@ -19,7 +19,7 @@ func main(){
 	database.Connect(cfg.DBUrl)
 	
 	h := handlers.RegisterHandlers(database.DB, cfg)
-	routes.RegisterRoutes(r, h)
+	routes.RegisterRoutes(r, h, cfg)
 
 	port := cfg.Port
 	if port == ""{

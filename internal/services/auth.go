@@ -80,6 +80,18 @@ func (s *AuthService) LoginUser(payload dto.LoginUser) (string, error){
 }
 
 
+func (s *AuthService) GetUserByID(id uuid.UUID) (*models.User, error){
+	var user models.User
+
+	if err := s.DB.Where("id = ?", id).First(&user).Error; err != nil{
+		return nil, errors.New("User not found")
+	}
+
+	return &user, nil
+}
+
+
+
 
 
 func (s *AuthService) generateToken(userID uuid.UUID) (string, error){

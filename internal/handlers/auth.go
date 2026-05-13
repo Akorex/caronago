@@ -7,6 +7,7 @@ import (
 	"github.com/Akorex/caronago/internal/services"
 	"github.com/Akorex/caronago/internal/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type AuthHandler struct {
@@ -53,4 +54,23 @@ func (h *AuthHandler) Login(c *gin.Context){
 	}
 
 	utils.SendSuccess(c, http.StatusOK, "Login successful", gin.H{"token": token})
+}
+
+func (h *AuthHandler) GetMe(c *gin.Context){
+	userID, ok := c.Get("userId")
+
+	if !ok{
+		utils.SendError(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
+	user, err := h.Service.GetUserByID(userID.(uuid.UUID))
+
+	if err != nil{
+		utils.SendError(c, http.StatusNotFound, err.Error())
+		return
+	}
+
+	utils.SendSuccess(c, http.StatusOK, "Profile successfully retrieved", user)
+
 }
