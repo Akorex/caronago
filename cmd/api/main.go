@@ -12,6 +12,7 @@ import (
 	"github.com/Akorex/caronago/internal/config"
 	"github.com/Akorex/caronago/internal/database"
 	"github.com/Akorex/caronago/internal/handlers"
+	"github.com/Akorex/caronago/internal/middleware"
 	"github.com/Akorex/caronago/internal/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,7 @@ func main(){
 	cfg := config.LoadConfig()
 
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(middleware.RequestIDMiddleware(), middleware.StructuredLogger(), gin.Recovery())
 
 	database.Connect(cfg.DBUrl)
 	
