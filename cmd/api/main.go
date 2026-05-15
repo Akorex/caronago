@@ -14,6 +14,8 @@ import (
 	"github.com/Akorex/caronago/internal/handlers"
 	"github.com/Akorex/caronago/internal/middleware"
 	"github.com/Akorex/caronago/internal/routes"
+
+	appError "github.com/Akorex/caronago/internal/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,12 +23,20 @@ func main(){
 	cfg := config.LoadConfig()
 
 	r := gin.New()
-	r.Use(middleware.RequestIDMiddleware(), middleware.StructuredLogger(), gin.Recovery())
+	r.Use(
+		middleware.RequestIDMiddleware(),
+		middleware.StructuredLogger(), 
+		gin.Recovery(), 
+		middleware.ErrorHandler(),
+	)
 
 	database.Connect(cfg.DBUrl)
 	
 	h := handlers.RegisterHandlers(database.DB, cfg)
 	routes.RegisterRoutes(r, h, cfg)
+	r.NoRoute(func(c *gin.Context) {
+    c.Error(appError.ErrNotFound("Route"))
+})
 
 	port := cfg.Port
 	if port == ""{

@@ -3,6 +3,7 @@ package middleware
 import (
 	"time"
 
+	"github.com/Akorex/caronago/internal/enums"
 	"github.com/Akorex/caronago/internal/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -16,15 +17,15 @@ func StructuredLogger() gin.HandlerFunc{
 		c.Next()
 
 		logger := utils.Log(c)
-		latency := time.Since(start)
+		latency := time.Since(start).Milliseconds()
 		status  := c.Writer.Status()
 
 		if status >= 500{
-			logger.Error("Server error", "status", status, "method", method, "path", path, "latency", latency.String(), "errors", c.Errors.String())
+			logger.Error(enums.MsgServerError, "status", status, "method", method, "path", path, "latency", latency, "errors", c.Errors.String())
 		}else if status >= 400{
-			logger.Warn("Client error", "status", status, "method", method, "path", path, "latency", latency.String(), "errors", c.Errors.String())
+			logger.Warn(enums.MsgClientError, "status", status, "method", method, "path", path, "latency", latency, "errors", c.Errors.String())
 		}else{
-			logger.Info("Request completed", "status", status, "method", method, "path", path, "latency", latency.String())
+			logger.Info(enums.MsgRequestCompleted, "status", status, "method", method, "path", path, "latency", latency)
 		}
 	}
 }

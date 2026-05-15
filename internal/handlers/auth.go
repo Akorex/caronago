@@ -30,7 +30,7 @@ func (h *AuthHandler) Register(c *gin.Context){
 
 	user, err := h.Service.RegisterUser(payload)
 	if err != nil{
-		utils.SendError(c, http.StatusBadRequest, err.Error())
+		c.Error(err)
 		return
 	}
 
@@ -49,7 +49,7 @@ func (h *AuthHandler) Login(c *gin.Context){
 	token, err := h.Service.LoginUser(payload)
 
 	if err != nil{
-		utils.SendError(c, http.StatusUnauthorized, err.Error())
+		c.Error(err)
 		return
 	}
 
@@ -67,7 +67,7 @@ func (h *AuthHandler) GetMe(c *gin.Context){
 	user, err := h.Service.GetUserByID(userID.(uuid.UUID))
 
 	if err != nil{
-		utils.SendError(c, http.StatusNotFound, err.Error())
+		c.Error(err)
 		return
 	}
 
